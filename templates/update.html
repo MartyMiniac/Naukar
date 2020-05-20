@@ -11,8 +11,8 @@
     <h1>Kya Badalna Hai Mere Aaka !!</h1>
 
     <div class="form">
-        <form action="/update/{{ task.id }}" method="POST">
-            <input type="text" name="content" id="content" value="{{task.content}}">
+        <form action="/update/{{ task['_id'] }}" method="POST">
+            <input type="text" name="content" id="content" value="{{task['Content']}}">
             <input type="submit" value="Change Kardo...">
         </form>
     </div>

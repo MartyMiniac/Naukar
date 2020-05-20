@@ -1,57 +1,39 @@
-from flask import Flask, render_template, url_for, request, redirect
-from flask_sqlalchemy import SQLAlchemy
+from flask import *
 from datetime import datetime
+from requestDatabase import requestDatabase
+import pytz
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
+db = requestDatabase()
 
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<Task %r>' % self.id
 @app.route('/', methods=['POST','GET'])
 def index():
     if request.method=="POST":
         task_content = request.form['content']
-        new_task = Todo(content=task_content)
-
-        try:
-            db.session.add(new_task)
-            db.session.commit()
-            return redirect('/')
-        except:
-            return "There was some Error"
-    else:
-        tasks = Todo.query.order_by(Todo.date_created).all()
-        return render_template('index.html', tasks=tasks)
-
-
-@app.route('/delete/<int:id>')
-def delete(id):
-    task_to_delete = Todo.query.get_or_404(id)
-
-    try:
-        db.session.delete(task_to_delete)
-        db.session.commit()
+        IST = pytz.timezone('Asia/Kolkata') 
+        dt_string = datetime.now(IST).strftime("%d/%m/%Y %I:%M:%S %p")
+        db.add(task_content, dt_string)
         return redirect('/')
-    except:
-        return 'Task not Found'
-
-@app.route('/update/<int:id>', methods=['GET','POST'])
-def update(id):
-    task = Todo.query.get_or_404(id)
-    if request.method == 'POST':
-        task.content = request.form['content']
-        try:
-            db.session.commit()
-            return redirect('/')
-        except:
-            return 'Task not Found'
     else:
-        return render_template('update.html', task=task)
+        tasks = db.getAll()
+        return render_template('index.html', tasks=tasks, length=db.len())
+
+
+@app.route('/delete/<string:id>')
+def delete(id):
+    db.delete(id)
+    return redirect('/')
+
+@app.route('/update/<string:id>', methods=['GET','POST'])
+def update(id):
+    if request.method == 'POST':
+        print(request)
+        task_content = request.form['content']
+        db.update(id, task_content)
+        return redirect('/')
+    else:
+        tasks = db.get(id)
+        return render_template('update.html', task=tasks)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,6 +1,6 @@
 @echo off
 
-set "VIRTUAL_ENV=C:\Users\Rohan Verma\VS Code\On Going Projects\my website\env"
+set "VIRTUAL_ENV=C:\Users\Rohan Verma\VS Code\On Going Projects\restdb database demo\env"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"

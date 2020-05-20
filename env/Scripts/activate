@@ -46,7 +46,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV='C:\Users\Rohan Verma\VS Code\On Going Projects\my website\env'
+VIRTUAL_ENV='C:\Users\Rohan Verma\VS Code\On Going Projects\restdb database demo\env'
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
